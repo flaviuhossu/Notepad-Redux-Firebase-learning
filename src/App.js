@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import AllNotes from './components/AllNotes'
+import CreateNote from './components/CreateNote'
+import ImportantNotes from './components/ImportantNotes'
+import { store } from './redux/store'
+import { load_notes } from './redux/actions/notes.action'
+// import { connect } from 'react-redux'
 
-function App() {
+const App = ({ loading }) => {
+  useEffect(() => {
+    store.dispatch(load_notes())
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container mt-3 p-3'>
+      <CreateNote />
+      <hr />
+
+      {loading && (
+        <div className='text-center'>
+          <div className='spinner-border my-3' />
+        </div>
+      )}
+
+      <ImportantNotes />
+      <hr />
+      <AllNotes />
     </div>
-  );
+  )
 }
 
-export default App;
+// const mapStateToProps = (state) => ({
+//   loading: state.notes_reducer.loading,
+// })
+
+export default App
+// export default connect(mapStateToProps)(App)
