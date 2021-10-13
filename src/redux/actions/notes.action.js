@@ -1,5 +1,7 @@
-import { db } from '../../firebase'
+import { doc, getDocs, setDoc, updateDoc } from '@firebase/firestore'
+import db from '../../firebase'
 import { ADD_NOTE, LOAD_NOTES, SET_LOADER, TOGGLE_NOTE } from '../types'
+import { collection, addDoc } from 'firebase/firestore'
 
 export const add_new_note = (data) => async (dispatch) => {
   try {
@@ -7,7 +9,9 @@ export const add_new_note = (data) => async (dispatch) => {
       type: SET_LOADER,
     })
 
-    await db.collection('notes').doc(data.id.toString()).set(data)
+    console.log('Add new data', data.isImportant)
+    const docRef = doc(db, 'notes', data.id.toString())
+    await setDoc(docRef, data)
 
     dispatch({
       type: ADD_NOTE,
@@ -19,20 +23,22 @@ export const add_new_note = (data) => async (dispatch) => {
 }
 export const toggle_note = (id) => async (dispatch) => {
   try {
+    const toggleRef = doc(db, 'notes', id.toString())
+
+    await updateDoc(toggleRef, {
+      isImportant: true,
+    })
     dispatch({
-      type: SET_LOADER,
+      type: TOGGLE_NOTE,
+      loading: true,
     })
 
-    const snapshot = db.collection('notes').doc(data.id.toString)
-
-    const data = (await snapshot.get()).data()
-
-    await snapshot.update({
-      isImportant: !data.isImportant,
+    dispatch({
+      type: LOAD_NOTES,
     })
-
-    dispatch(load_notes())
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message)
+  }
 }
 
 export const load_notes = () => async (dispatch) => {
@@ -41,7 +47,15 @@ export const load_notes = () => async (dispatch) => {
       type: SET_LOADER,
     })
 
-    const snapshot = await db.collection('notes').get()
+    const snapshot = await getDocs(collection(db, 'notes'))
+
     const all_notes = snapshot.docs.map((doc) => doc.data())
-  } catch (error) {}
+
+    dispatch({
+      type: LOAD_NOTES,
+      payload: all_notes,
+    })
+  } catch (error) {
+    console.log(error.message)
+  }
 }

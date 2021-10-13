@@ -15,7 +15,7 @@ const CreateNote = () => {
       date: new Date().toJSON().slice(0, 10),
       isImportant: 'false',
     }
-    dispatch(add_new_note(data))
+    add_new_note(data)(dispatch)
   }
   return (
     <div>
