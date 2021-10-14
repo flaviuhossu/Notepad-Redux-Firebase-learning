@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { toggle_note } from '../redux/actions/notes.action'
+import { load_notes, toggle_note } from '../redux/actions/notes.action'
 
 const Note = ({ note }) => {
   const dispatch = useDispatch()

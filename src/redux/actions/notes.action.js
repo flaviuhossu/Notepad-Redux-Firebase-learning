@@ -8,8 +8,6 @@ export const add_new_note = (data) => async (dispatch) => {
     dispatch({
       type: SET_LOADER,
     })
-
-    console.log('Add new data', data.isImportant)
     const docRef = doc(db, 'notes', data.id.toString())
     await setDoc(docRef, data)
 
@@ -32,7 +30,6 @@ export const toggle_note = (id) => async (dispatch) => {
       type: TOGGLE_NOTE,
       loading: true,
     })
-
     dispatch({
       type: LOAD_NOTES,
     })

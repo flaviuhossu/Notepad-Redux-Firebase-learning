@@ -13,7 +13,7 @@ const CreateNote = () => {
       note,
       id: Math.floor(Math.random() * 1000),
       date: new Date().toJSON().slice(0, 10),
-      isImportant: 'false',
+      isImportant: false,
     }
     add_new_note(data)(dispatch)
   }
